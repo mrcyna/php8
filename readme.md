@@ -29,7 +29,7 @@ Now you can confirm your installation by checking out the `http://127.0.0.1/` in
 ## CLI
 to access PHP CLI you can run below command in your terminal:
 ```bash
-docker-compose exec app bash
+docker-compose exec -u $(id -u ${USER}):$(id -g ${USER}) app bash
 ```
 
 to access MariaDB CLI you can run below command in your terminal:
