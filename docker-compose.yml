@@ -1,0 +1,39 @@
+version: '3'
+services:
+  app:
+    container_name: ${APP_NAME:-php8}-app
+    image: tangramor/nginx-php8-fpm
+    ports:
+      - '${APP_PORT:-80}:80'
+    environment:
+      TZ: 'Asia/Tehran'
+      WEBROOT: '/var/www/html/public'
+    volumes:
+      - '.:/var/www/html'
+    networks:
+      - sail
+    depends_on:
+      - mysql
+  mysql:
+    container_name: ${APP_NAME:-php8}-mysql
+    image: 'mariadb:10'
+    ports:
+        - '${MYSQL_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASSWORD}'
+      MYSQL_DATABASE: '${DB_DATABASE}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    volumes:
+      - 'php8:/var/lib/mysql'
+    networks:
+      - sail
+    security_opt:
+      - seccomp:unconfined
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping"]
+networks:
+  sail:
+    driver: bridge
+volumes:
+  php8:
+    driver: local
